@@ -6,11 +6,9 @@ library(MASS)
 library(base)
 library(stats)
 library(dplyr)
-library(data.table)
-library(survival)
-library(splines)
 library(lme4)
-library(lqmm)
+
+
 path="C:/Users/Damitri/Desktop/Experiment JM/EXP_JAGS/Horse_shoe"
 #Total id
 n=5000
@@ -38,7 +36,6 @@ model {
 
 for(i in 1:n) 
 {
- 
  #Regression
  #---------------------
  mu[i]= beta_0 + inprod(beta,X[i,2:9])
@@ -52,8 +49,6 @@ for(i in 1:n)
   
   tau ~ dgamma(0.001,0.001)
   sig = 1/tau
-  
-  
   #Beta
   #-----
   beta_0 ~dnorm(0,0.001)
@@ -62,18 +57,12 @@ for(i in 1:n)
   prec[p]=1/((nu[p]*eta)*(nu[p]*eta))
   beta[p] ~dnorm(0,prec[p])
   }
-  
-  
   #Horse Shoe Hyper Prior 
   for(p in 1:n_P)
   {
   nu[p] ~ dt(0,1,1)T(0,)
   }
-  eta ~dt(0,1,1)T(0,)
-  
- 
-  
-  
+  eta ~dt(0,1,1)T(0,) #Actual Cauchy t(0,1,1) is Cauchy
 }
 ",fill = TRUE)
 sink()
@@ -84,22 +73,16 @@ model {
 
 for(i in 1:n) 
 {
- 
  #Regression
  #---------------------
  mu[i]= beta_0 + inprod(beta,X[i,2:9])
  y[i] ~dnorm(mu[i],tau)
-
 }#loop of i
-
 #Prior
 #-------------------------------------
   #Error Variance
-  
   tau ~ dgamma(0.001,0.001)
   sig = 1/tau
-  
-  
   #Beta
   #-----
   beta_0 ~dnorm(0,0.001)
@@ -108,26 +91,19 @@ for(i in 1:n)
   prec[p]=1/(nu1[p]*eta1)
   beta[p] ~dnorm(0,prec[p])
   }
-  
-  
+
   #Horse Shoe Hyper Prior 
   for(p in 1:n_P)
   {
   nu1[p] ~ df(1,1)
   nu[p] = pow(nu1[p],0.5)
-  
   }
-  eta1 ~ df(1,1)
+  eta1 ~ df(1,1) #F(1,1) is Cauchy(0,1) ^2
   eta = pow(eta1 , 0.5)
-  
- 
-  
-  
+
 }
 ",fill = TRUE)
 sink()
-
-
 #Data list for Lagged JM
 dat_list_HS_reg =list('n'=n,'X'=X , 'y'=y , 'n_P'=ncol(X[,2:9]))
 
@@ -152,10 +128,7 @@ jagsfit_HS_reg1<- jags(data=dat_list_HS_reg,
                       n.chains=2, n.iter=5000, n.burnin=1000,
                       n.thin=5,n.adapt = 200,
                       DIC=TRUE)
-
-
-
-
+#See if the difference exists in the above 2 methods
 
 hs=data.frame(beta_names=paste("beta_",c(1:length(beta)), sep=""),
               Actual_beta=beta,
