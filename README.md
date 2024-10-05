@@ -11,5 +11,11 @@ The horse-shoe prior is a strong prior, used for variable selection, intending l
 # 2. Bayesian Lasso
 
 # 3. Kuo-Mallik
+ 
+ Along with finding which variable is important, this method also lets you know what is the probability of inclusion of each variable , is in the model. Based on these probabilities, the researcher can now judge if the variable is at all important or not.
+ 
+ This refers to the paper : Kuo, L. and Mallick, B., 1998. Variable selection for regression models. Sankhyā: The Indian Journal of Statistics, Series B, pp.65-81.
+ 
+ Link to the paper : https://www.jstor.org/stable/25053023
 
 # 4. Slab and Spike
