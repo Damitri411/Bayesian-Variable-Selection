@@ -20,4 +20,6 @@ https://link.springer.com/article/10.1007/s10260-023-00727-9
 
 # 4. Slab and Spike
 
- https://academic.oup.com/biomet/article-abstract/97/2/465/219397?redirectedFrom=fulltext
+Variable selection through local-global shrinkage , is what slab and spike prior is used for. Refer to this paper for more information 
+
+https://academic.oup.com/biomet/article-abstract/97/2/465/219397?redirectedFrom=fulltext
